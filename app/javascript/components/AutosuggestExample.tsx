@@ -3,8 +3,13 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 
+type SuggestItem = {
+  name: string
+  year: number
+}
+
 // Imagine you have a list of languages that you'd like to autosuggest.
-const languages = [
+const languages: SuggestItem[] = [
   {
     name: 'C',
     year: 1972
@@ -16,7 +21,7 @@ const languages = [
 ];
 
 // Teach Autosuggest how to calculate suggestions for any given input value.
-const getSuggestions = value => {
+const getSuggestions = (value: string): SuggestItem[] => {
   const inputValue = value.trim().toLowerCase();
   const inputLength = inputValue.length;
 
@@ -28,24 +33,24 @@ const getSuggestions = value => {
 // When suggestion is clicked, Autosuggest needs to populate the input
 // based on the clicked suggestion. Teach Autosuggest how to calculate the
 // input value for every given suggestion.
-const getSuggestionValue = suggestion => suggestion.name;
+const getSuggestionValue = (suggestion: SuggestItem): string => suggestion.name;
 
 // Use your imagination to render suggestions.
-const renderSuggestion = suggestion => (
+const renderSuggestion = (suggestion: SuggestItem) => (
   <div>
     {suggestion.name}
   </div>
 );
 
-const AutosuggestExample = () => {
+const AutosuggestExample: React.FC = () => {
   const [value, setValue] = useState('')
-  const [suggestions, setSuggestions] = useState([])
+  const [suggestions, setSuggestions] = useState<SuggestItem[]>([])
 
-  const onSuggestionsFetchRequested = ({ value }) => {
-    setSuggestions(getSuggestions(value))
+  const onSuggestionsFetchRequested: Autosuggest.SuggestionsFetchRequested = (request: Autosuggest.SuggestionsFetchRequestedParams) => {
+    setSuggestions(getSuggestions(request.value))
   };
 
-  const onSuggestionsClearRequested = () => {
+  const onSuggestionsClearRequested: Autosuggest.OnSuggestionsClearRequested = () => {
     setSuggestions([])
   };
 
@@ -53,7 +58,7 @@ const AutosuggestExample = () => {
     setValue(newValue)
   };
 
-  const inputProps = {
+  const inputProps: Autosuggest.InputProps<SuggestItem> = {
     placeholder: 'Type a programming language',
     value,
     onChange
