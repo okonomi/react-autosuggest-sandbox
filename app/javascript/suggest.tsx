@@ -2,9 +2,9 @@ import React from "react"
 import { createRoot } from "react-dom/client"
 
 // import Suggest from "./components/Suggest"
-import AutosuggestExample from "./components/AutosuggestExample"
+import LocalGovernmentSuggest from "./components/LocalGovernmentSuggest"
 
 const container = document.getElementById("app")
 const root = createRoot(container)
 
-root.render(<AutosuggestExample />)
+root.render(<LocalGovernmentSuggest />)

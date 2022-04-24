@@ -23,7 +23,18 @@ const languages: SuggestItem[] = [
 // Teach Autosuggest how to calculate suggestions for any given input value.
 const getSuggestions = (value: string): SuggestItem[] => {
   const inputValue = value.trim().toLowerCase();
+
+
+  
+
+
+
+
   const inputLength = inputValue.length;
+
+
+
+
 
   return inputLength === 0 ? [] : languages.filter(lang =>
     lang.name.toLowerCase().slice(0, inputLength) === inputValue
