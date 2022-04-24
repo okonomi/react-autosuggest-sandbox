@@ -62,7 +62,7 @@ const LocalGovernmentSuggest: React.FC = () => {
     container: 'autosuggest',
     input: 'form-control',
     suggestionsContainer: 'dropdown',
-    suggestionsList: `dropdown-menu ${suggestions.length ? 'show' : ''}`,
+    suggestionsList: `dropdown-menu w-100 ${suggestions.length ? 'show' : ''}`,
     suggestion: 'dropdown-item',
     suggestionHighlighted: 'active'
  };
