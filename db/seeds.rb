@@ -6,8 +6,32 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-LocalGovernment.create([
-  { code: '010006', name: '北海道' },
-  { code: '011002', name: '北海道札幌市' },
-  { code: '022012', name: '青森県青森市' }
-])
+require 'net/http'
+require 'uri'
+require 'rubyXL'
+
+# download from soumu.go.jp
+# https://www.soumu.go.jp/denshijiti/code.html
+uri = URI.parse("https://www.soumu.go.jp/main_content/000730858.xlsx")
+response = Net::HTTP.get_response(uri)
+
+workbook = RubyXL::Parser.parse_buffer(response.body)
+
+LocalGovernment.delete_all
+[0, 1].each do |idx|
+  worksheet = workbook[idx]
+  worksheet.each_with_index do |row, i|
+    # skip header
+    next if i == 0
+    # finish when empty row
+    break if row[0].nil?
+
+    begin
+      LocalGovernment.create(
+        code: row[0].value,
+        name: "#{row[1].value}#{row[2].value}"
+      )
+    rescue ActiveRecord::RecordNotUnique
+    end
+  end
+end
