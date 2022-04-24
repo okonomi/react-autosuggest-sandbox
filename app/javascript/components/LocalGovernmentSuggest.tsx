@@ -9,21 +9,14 @@ type LocalGovernment = {
 }
 
 const getSuggestions = async (value: string): Promise<LocalGovernment[]> => {
-  const inputValue = value.trim().toLowerCase();
-  const inputLength = inputValue.length;
-
-  const res = await axios.get(
+  const res = await axios.get<LocalGovernment[]>(
     '/local_governments.json', {
       params: {
         'q[name_cont]': value
       }
     }
   )
-  const localGovernments = res.data
-
-  return inputLength === 0 ? [] : localGovernments.filter(gov =>
-    gov.name.toLowerCase().slice(0, inputLength) === inputValue
-  );
+  return res.data
 };
 
 const getSuggestionValue = (suggestion: LocalGovernment): string => suggestion.name;
