@@ -57,7 +57,17 @@ const LocalGovernmentSuggest: React.FC = () => {
     onChange
   };
 
-  return (
+  // https://github.com/moroshko/react-autosuggest/issues/64#issuecomment-631794527
+  const theme = {
+    container: 'autosuggest',
+    input: 'form-control',
+    suggestionsContainer: 'dropdown',
+    suggestionsList: `dropdown-menu ${suggestions.length ? 'show' : ''}`,
+    suggestion: 'dropdown-item',
+    suggestionHighlighted: 'active'
+ };
+
+return (
     <Autosuggest
       suggestions={suggestions}
       onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -65,6 +75,7 @@ const LocalGovernmentSuggest: React.FC = () => {
       getSuggestionValue={getSuggestionValue}
       renderSuggestion={renderSuggestion}
       inputProps={inputProps}
+      theme={theme}
     />
   );
 }
