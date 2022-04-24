@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Autosuggest from 'react-autosuggest'
 import axios from 'redaxios'
+import { useDebouncedCallback } from 'use-debounce'
 
 type LocalGovernment = {
   code: string
@@ -37,11 +38,13 @@ const LocalGovernmentSuggest: React.FC = () => {
   const [value, setValue] = useState('')
   const [suggestions, setSuggestions] = useState<LocalGovernment[]>([])
 
-  const onSuggestionsFetchRequested: Autosuggest.SuggestionsFetchRequested = async (request: Autosuggest.SuggestionsFetchRequestedParams) => {
-    const suggestions = await getSuggestions(request.value)
-
-    setSuggestions(suggestions)
-  };
+  const onSuggestionsFetchRequested = useDebouncedCallback<Autosuggest.SuggestionsFetchRequested>(
+    async ({ value }) => {
+      const suggestions = await getSuggestions(value)
+      setSuggestions(suggestions)
+    },
+    500
+  )
 
   const onSuggestionsClearRequested: Autosuggest.OnSuggestionsClearRequested = () => {
     setSuggestions([])
