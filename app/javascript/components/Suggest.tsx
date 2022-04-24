@@ -1,6 +1,6 @@
 import React from "react"
 
-const Suggest = () => {
+const Suggest: React.FC = () => {
   return <p>suggest</p>
 }
 
