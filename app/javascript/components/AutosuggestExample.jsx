@@ -1,6 +1,6 @@
 // https://github.com/moroshko/react-autosuggest#basic-usage
 
-import React from 'react';
+import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 
 // Imagine you have a list of languages that you'd like to autosuggest.
@@ -37,64 +37,38 @@ const renderSuggestion = suggestion => (
   </div>
 );
 
-class Example extends React.Component {
-  constructor() {
-    super();
+const AutosuggestExample = () => {
+  const [value, setValue] = useState('')
+  const [suggestions, setSuggestions] = useState([])
 
-    // Autosuggest is a controlled component.
-    // This means that you need to provide an input value
-    // and an onChange handler that updates this value (see below).
-    // Suggestions also need to be provided to the Autosuggest,
-    // and they are initially empty because the Autosuggest is closed.
-    this.state = {
-      value: '',
-      suggestions: []
-    };
-  }
-
-  onChange = (event, { newValue }) => {
-    this.setState({
-      value: newValue
-    });
+  const onSuggestionsFetchRequested = ({ value }) => {
+    setSuggestions(getSuggestions(value))
   };
 
-  // Autosuggest will call this function every time you need to update suggestions.
-  // You already implemented this logic above, so just use it.
-  onSuggestionsFetchRequested = ({ value }) => {
-    this.setState({
-      suggestions: getSuggestions(value)
-    });
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([])
   };
 
-  // Autosuggest will call this function every time you need to clear suggestions.
-  onSuggestionsClearRequested = () => {
-    this.setState({
-      suggestions: []
-    });
+  const onChange = (event, { newValue }) => {
+    setValue(newValue)
   };
 
-  render() {
-    const { value, suggestions } = this.state;
+  const inputProps = {
+    placeholder: 'Type a programming language',
+    value,
+    onChange
+  };
 
-    // Autosuggest will pass through all these props to the input.
-    const inputProps = {
-      placeholder: 'Type a programming language',
-      value,
-      onChange: this.onChange
-    };
-
-    // Finally, render it!
-    return (
-      <Autosuggest
-        suggestions={suggestions}
-        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-        getSuggestionValue={getSuggestionValue}
-        renderSuggestion={renderSuggestion}
-        inputProps={inputProps}
-      />
-    );
-  }
+  return (
+    <Autosuggest
+      suggestions={suggestions}
+      onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+      onSuggestionsClearRequested={onSuggestionsClearRequested}
+      getSuggestionValue={getSuggestionValue}
+      renderSuggestion={renderSuggestion}
+      inputProps={inputProps}
+    />
+  );
 }
 
-export default Example
+export default AutosuggestExample
