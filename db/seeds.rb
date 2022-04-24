@@ -22,7 +22,7 @@ LocalGovernment.delete_all
   worksheet = workbook[idx]
   worksheet.each_with_index do |row, i|
     # skip header
-    next if i == 0
+    next if i.zero?
     # finish when empty row
     break if row[0].nil?
 
@@ -32,6 +32,7 @@ LocalGovernment.delete_all
         name: "#{row[1].value}#{row[2].value}"
       )
     rescue ActiveRecord::RecordNotUnique
+      # do nothing
     end
   end
 end
