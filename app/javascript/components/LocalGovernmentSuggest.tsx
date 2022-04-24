@@ -1,19 +1,24 @@
 import React, { useState } from 'react'
 import Autosuggest from 'react-autosuggest'
+import axios from 'redaxios'
 
 type LocalGovernment = {
   code: string
   name: string
 }
 
-const localGovernments: LocalGovernment[] = [
-  { code: '011002', name: '北海道札幌市' },
-  { code: '022012', name: '青森県青森市' }
-]
-
-const getSuggestions = (value: string): LocalGovernment[] => {
+const getSuggestions = async (value: string): Promise<LocalGovernment[]> => {
   const inputValue = value.trim().toLowerCase();
   const inputLength = inputValue.length;
+
+  const res = await axios.get(
+    '/local_governments.json', {
+      params: {
+        'q[name_cont]': value
+      }
+    }
+  )
+  const localGovernments = res.data
 
   return inputLength === 0 ? [] : localGovernments.filter(gov =>
     gov.name.toLowerCase().slice(0, inputLength) === inputValue
@@ -32,8 +37,10 @@ const LocalGovernmentSuggest: React.FC = () => {
   const [value, setValue] = useState('')
   const [suggestions, setSuggestions] = useState<LocalGovernment[]>([])
 
-  const onSuggestionsFetchRequested: Autosuggest.SuggestionsFetchRequested = (request: Autosuggest.SuggestionsFetchRequestedParams) => {
-    setSuggestions(getSuggestions(request.value))
+  const onSuggestionsFetchRequested: Autosuggest.SuggestionsFetchRequested = async (request: Autosuggest.SuggestionsFetchRequestedParams) => {
+    const suggestions = await getSuggestions(request.value)
+
+    setSuggestions(suggestions)
   };
 
   const onSuggestionsClearRequested: Autosuggest.OnSuggestionsClearRequested = () => {
